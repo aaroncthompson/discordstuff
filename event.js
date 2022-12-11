@@ -15,11 +15,16 @@ if (isMANAGE_CHANNELS) {
   } else {
     var image = `https://i.imgur.com/UFKuOHC.png`;
   }
-// emoji is optional, has a default value
   if ( typeof context.params.event.data.options[3] !== 'undefined') {
     var emoji = context.params.event.data.options[3].value
   } else {
     var emoji = `:white_check_mark:`;
+  }
+  if ( typeof context.params.event.data.options[4] !== 'undefined') {
+    var channelId = context.params.event.data.options[4].value
+  } else {
+    var channelId = `1049102286430945280`; // #rsvp
+//    var channelId = `1047779404622856192`; // #bot-junk
   }
 
 // generate a random role name
@@ -36,14 +41,13 @@ if (isMANAGE_CHANNELS) {
 
 // create post
   let theMessage = await lib.discord.channels['@0.1.1'].messages.create({
-    channel_id: `1049102286430945280`, // #rsvp
-//    channel_id: `1047779404622856192`, // #bot-junk
+    channel_id: channelId,
     content: '',
     tts: false,
     embed: {
       type: 'rich',
       title: eventname,
-      description: description + "\n\nClick "+emoji+" once it appears if you would like to attend!",
+      description: description + "\n\nClick "+emoji+" **(once it appears)** if you would like to attend!",
       color: 131644,
       image: {
         url: image,
@@ -90,15 +94,20 @@ if (isMANAGE_CHANNELS) {
       },
     ],
   });
+  
+//  await lib.discord.channels['@0.2.0'].messages.create({
+//    channel_id: `${context.params.event.channel_id}`,
+//    content: `\`&rr add ${channelId} ${theMessage.id} ${emoji} ${newRole.name}\``,
+//  });
 
 // confirmation
   await lib.discord.channels['@0.2.0'].messages.create({
     channel_id: `${context.params.event.channel_id}`,
-    content: `**<@${context.params.event.member.user.id}> - role, post, and channel successfully created!**`,
+    content: `✔️ | <@${context.params.event.member.user.id}>`,
     embed: {
       type: 'rich',
-      title: "Event: "+eventname,
-      description: "message_id: "+theMessage.id+"\nemoji: "+emoji+"\nrole: @"+newRole.name+"\nchannel: #rsvp",
+      title: "Event \""+eventname+"\" created!\nCopy and paste the following:",
+      description: `\`&rr add ${channelId} ${theMessage.id} ${emoji} ${newRole.name}\``,
       color: 131644,
     },
   });
@@ -106,8 +115,6 @@ if (isMANAGE_CHANNELS) {
 } else {
   await lib.discord.channels['@0.1.2'].messages.create({
     channel_id: `${context.params.event.channel_id}`,
-    content: `❌ | Hello, <@!${context.params.event.member.user.id}>! Unfortunately, you do not have permission to run this command.`,
+    content: `❌ | You don't have permission to run that command, <@!${context.params.event.member.user.id}>`,
     });
 }
-
-// once users have created a role + channel + post, they can use something like carlbot's /reactionrole add to add a reaction role to the post.
