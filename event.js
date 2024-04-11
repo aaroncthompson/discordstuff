@@ -94,11 +94,6 @@ if (isMANAGE_CHANNELS) {
       },
     ],
   });
-  
-//  await lib.discord.channels['@0.2.0'].messages.create({
-//    channel_id: `${context.params.event.channel_id}`,
-//    content: `\`&rr add ${channelId} ${theMessage.id} ${emoji} ${newRole.name}\``,
-//  });
 
 // confirmation
   await lib.discord.channels['@0.2.0'].messages.create({
@@ -118,3 +113,5 @@ if (isMANAGE_CHANNELS) {
     content: `❌ | You don't have permission to run that command, <@!${context.params.event.member.user.id}>`,
     });
 }
+
+// once users have created a role + channel + post, they can use something like carlbot's /reactionrole add to add a reaction role to the post.
